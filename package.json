@@ -1,11 +1,11 @@
 {
-  "name":         "@archivistnerd/filecache",
-  "version":      "1.0.0",
-  "description":  "Archivist's filecache Package",
-  "copy":         "Copyright (c) 2020 Archivist-Nerd",
-  "main":         "filecache.js",
+  "name": "@archivistnerd/filecache",
+  "version": "1.0.1",
+  "description": "Archivist's filecache Package",
+  "copy": "Copyright (c) 2020 Archivist-Nerd",
+  "main": "filecache.js",
   "scripts": {
-    "test":       "node example.js"
+    "test": "node example.js"
   },
   "keywords": [
     "Archivist",
@@ -14,19 +14,19 @@
     "file",
     "JSON"
   ],
-  "license":      "MIT",
-  "homepage":     "https://github.com/Archivist-Nerd/node-filecache/blob/main/README.md",
+  "license": "MIT",
+  "homepage": "https://github.com/Archivist-Nerd/node-filecache/blob/main/README.md",
   "bugs": {
-    "url":        "https://github.com/Archivist-Nerd/node-filecache/issues"
+    "url": "https://github.com/Archivist-Nerd/node-filecache/issues"
   },
   "repository": {
-    "url":        "https://github.com/Archivist-Nerd/node-filecache.git",
-    "type":       "git"
+    "url": "https://github.com/Archivist-Nerd/node-filecache.git",
+    "type": "git"
   },
   "author": {
-    "name":       "Archivist Nerd",
-    "email":      "a.Nerd.Archivist@gmail.com",
-    "url":        "https://github.com/Archivist-Nerd"
+    "name": "Archivist Nerd",
+    "email": "a.Nerd.Archivist@gmail.com",
+    "url": "https://github.com/Archivist-Nerd"
   },
   "dependencies": {
     "mime": "^2.4.6"
