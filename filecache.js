@@ -93,7 +93,7 @@ const FileCache = ()=>{
     const walk = function(dir='/') {
       let url   = (filename='')=>(`${dir}${filename}`).replace('//','/')
         , path  = (filename='')=>(`${base}${dir}${filename}`).replace('//','/')
-        , readFile  = (filename='')=> fs.readFileSync( path( filename ), 'utf8' )
+        , readFile  = (filename='')=> fs.readFileSync( path( filename ) )
         , files = fs.readdirSync( path() )
         ;
       if ( dir.substr(-1) !== '/' ) dir += '/'

@@ -1,6 +1,6 @@
 {
   "name": "@archivistnerd/filecache",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Archivist's filecache Package",
   "copy": "Copyright (c) 2020 Archivist-Nerd",
   "main": "filecache.js",
