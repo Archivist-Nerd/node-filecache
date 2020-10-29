@@ -5,80 +5,74 @@
 
 const fs   = require('fs')
     , Mime = require('mime')
+    , atob = ascii  => Buffer.from(ascii).toString('base64')
+    , btoa = binary => Buffer.from(binary, 'base64') //.toString('binary')
     ;
 /*
     File Cache Functions
 */
 const FileCache = ()=>{
-  const atob = ascii  => Buffer.from(ascii).toString('base64')
-      , btoa = binary => Buffer.from(binary, 'base64') //.toString('binary')
-      ;
-  let _Cache = {}
+  let _Cache = {
+        mimes: {},
+        files: {},
+      }
     , totalSize = 0
-
+    ;
   function clear(){
-    _Cache = {}
+    _Cache.mimes = {}
+    _Cache.files = {}
     totalSize = 0
     return this
   }
   function list(){
     let result = []
     Object
-      .keys( _Cache )
+      .keys( _Cache.files )
       .sort()
       .forEach( key=>result.push( key ) )
     return result
   }
   
-  function getFile( url='' ){
-    return _Cache[url]
-  }
-  function getData( url='' ){
-    return _Cache[url]? _Cache[url].data:undefined
-  }
-  function getMime( url='' ){
-    return _Cache[url]? _Cache[url].mime:''
-  }
+  let getData = ( url='' )=>_Cache.files[url]
+    , getMime = ( url='' )=>_Cache.mimes[ url.split('/').pop().split('.').pop() ]
+    , getFile = ( url='' )=>({ data: getData(url), mime: getMime(url) })
+    , bytes   = ()=>totalSize
+    ;
 
   function add( url='', data='', mime=''){
-    if ( typeof _Cache[url] !== 'undefined' ) totalSize -= _Cache[url].data.length
-    _Cache [ url ] = {
-      data: data,
-      mime: mime,
-    }
+    if ( typeof _Cache[url] !== 'undefined' ) totalSize -= _Cache.files[ url ].length
+    _Cache.files[ url ] = data
+    _Cache.mimes[ url.split('/').pop().split('.').pop().toLowerCase() ] = mime
     totalSize += data.length
     return this
   }
 
-  function bytes(){
-    return totalSize
-  }
-
-  function load( filename='' ){
+  function load( filename='', root='' ){
     if ( !filename.length) throw new Error('Blank Filename')
     if ( !fs.existsSync(filename) ) throw new Error(`Cache File "${filename}" does not exist`)
 
     let fileCache = JSON.parse( fs.readFileSync( filename, 'utf8' ) )
-
-    console.log(`loaded: Cache File "${filename}" \t ${ Object.keys( fileCache ).length } files`)
-
+    // add mimes
     Object
-      .keys( fileCache )
-      .forEach( key=>{
-        let file = fileCache[ key ]
-        add( key, btoa( file.data ), file.mime )
-      })
+      .keys( fileCache.mimes )
+      .forEach( key=> _Cache.mimes[ key ] = fileCache.mimes[ key ] )
+    // add files
+    Object
+      .keys( fileCache.files )
+      .forEach( key=> _Cache.files[ key ] = fileCache.files[ root+key ] )
     return this
   }
 
   function save( filename='' ){
     if ( !filename.length) throw new Error('Blank Filename')
-
-    let CacheSorted = {}
-    Object.keys( _Cache ).sort().forEach( key=> {
-      CacheSorted[ key ] = _Cache[ key ]
-      CacheSorted[ key ].data = atob( _Cache[ key ].data )
-    })
+    let CacheSorted = {
+      mimes: {},
+      files: {},
+    }
+    // sort & add mimes
+    Object.keys( _Cache.mimes ).sort().forEach( key=> CacheSorted.mimes[key] = _Cache.mimes[key] )
+    // sort & add files
+    Object.keys( _Cache.files ).sort().forEach( key=> CacheSorted.files[key] = atob( _Cache.files[key] ) )
 
     fs.writeFileSync( filename, JSON.stringify( CacheSorted, null, '\t' ) )
 
@@ -121,10 +115,10 @@ const FileCache = ()=>{
     /*
       Process all files
     */
-    Object.keys( _Cache ).forEach( key=> {
+    Object.keys( _Cache.files ).forEach( key=> {
       let folders  = key.split('/')
         , filename = (folders.slice(-1)[0] !=='') ? folders.pop():'index.html'
-        , filedata = btoa( _Cache[ key ].data )
+        , filedata = btoa( _Cache.files[ key ] )
         , fullpath = `${path}/${folders.join('/')}`
         ;
       // create path if not root

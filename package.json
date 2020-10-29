@@ -1,11 +1,11 @@
 {
   "name": "@archivistnerd/filecache",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Archivist's filecache Package",
   "copy": "Copyright (c) 2020 Archivist-Nerd",
   "main": "filecache.js",
   "scripts": {
-    "test": "node example.js"
+    "test": "node examples/example.js"
   },
   "keywords": [
     "Archivist",
